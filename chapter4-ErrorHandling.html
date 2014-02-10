@@ -1,0 +1,98 @@
+<html>
+<body>
+<script type="text/javascript">
+
+// Error Handling
+
+//Returning a special value
+function between(string, start, end) {
+    var startAt = string.indexOf(start);
+    if (startAt == -1)
+        return undefined;
+    startAt += start.length;
+    var endAt = string.indexOf(end, startAt);
+    if(EndAt == -1)
+        return undefined;
+        
+    return string.slice(startAt,endAt);
+    
+}
+
+var input = promprt("Tell me something: ");
+var parenthesized = between(input, "(", ")",);
+if (parenthesized != undefined)
+    print("You parenthesized '", parenthesized, "' .");
+    
+
+function lastElement(array) {
+    if (array.length > 0)
+        return array[array.length - 1];
+    else
+        return undefined;
+}
+
+lastElement([1,2,undefined]);
+// was there a last element? Undefined is returned, so you don't know
+
+// Exceptions
+function lastElement(array) {
+    if (array.length > 0)
+        return array[array.length - 1];
+    else
+        throw "Cannot take the last element of an empty array.";
+}
+
+function lastElementPlusTen(array) {
+    return lastElement(array) +10;
+}
+
+try {
+    print(lastElementPlusTen([]));
+}
+catch(error) {
+    print("Something went wrong: ", error);
+}
+ 
+//Clean up after exceptions with the "finally" block
+function processThing(thing) {
+    var prevThing = currentThing;
+    currentThing = thing;
+    try {
+        // do complicated thing that might throw exception
+    }
+    finally {
+        currentThing=prevThing;
+    }
+}
+
+// Error objects
+//as seen earlier, the "error" can be thrown
+// or you can manually throw one
+throw new Error("Wolf!");
+
+//Selective Catching
+
+var InvalidInputError = new Error("Invalid Numeric Input");
+
+function inputNumber() {
+    var input = Number(prompt("Give me a number: ", ""));
+    if (isNaN(input))
+        throw InvalidInputError;
+    return input;
+}
+
+try {
+    alert(inputNumber() + 5);
+    break;
+}
+catch(e) {
+    if(e != InvalidInputError)
+        throw e;
+    alert("You did not input a number. Try again.");
+}
+
+
+
+</script>
+</body>
+</html>

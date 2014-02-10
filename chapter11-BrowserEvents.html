@@ -1,0 +1,172 @@
+<html>
+<body>
+<script type="text/javascript">
+
+//Event Handlers
+//Browser Javascript is single-threaded
+//Registering a Handler
+
+//Four event-related actions you might want:
+//1. Registering an event handler
+//2. Getting the event object
+//3. Extracting information from this object
+//4. Signaling that an event has been handled
+
+//Assuming "button" holds a DOM node for a button:
+
+//In IE
+button.attachEvent("onclick", function(){alert("Click!");});
+//Other browsers
+button.addEventListener("click", function(){print("Click!");}, false);
+//Setting the third parameter to "true" is rarely used because it can break in IE
+
+//A function to determine which one to use
+funciton registerEventHandler(node, event, handler) {
+    if (typeof node.addEventListener=="function") {
+        node.addEventListener(event, handler, false);
+    }
+    else {
+        node.attachEvent("on"+event, handler);
+    }
+}
+registerEventHandler(button, "click", function(){print("Click 2");});
+
+//Unregister/Remove events
+function unregisterEventHandler(node, event, handler) {
+    if(typeof node.removeEventListener=="function") {
+        node.removeEventListener(event, handler, false);
+    }
+    else {
+        node.detachEvent("on"+event, handler);
+    }
+}
+
+//Event Objects
+registerEventHandler(document.body, "click", function(event){
+    event = event || window.event;
+    print(event.clientX, ",", event.clientY);
+});
+
+//Mouse-Related Event Types
+
+//mousedown, mouseup, click, dblclick
+//Event objects have property "target" or "srcElement"
+//mousemove, mouseover, mouseout
+
+registerEventHandler(myParagraph, "mouseover", function(event) {
+    event= event || window.event;
+    if ((event.target || event.srcElement) == myParagraph) {
+        print("Thouse mouse has entered my paragraph!");
+    }
+});
+
+//Keyboard Events
+
+//Every keystroke: keydown, keyup, keypress
+//Do not use keypress first, as not all keys are supported for keypress like IE's arrow keys
+//Use the "keycode" property to find which key was pressed
+//Also use: shiftKey, ctrlKey, altKey, metaKey
+
+//The below code will cause a character to be printed whenever
+//a key that makes that character is pressed
+registerEventHandler(document.body, "keypress", function(event){
+    event = event || window.event;
+    var charCode = event.charCode || event.keyCode;
+    if(charCode) {
+        print("Character '", String.fromCharCode(charCode),"' was typed.");
+    }
+});
+
+//Stopping an event
+//"stopPropogation()" used to stop event bubbling
+//"preventDefault()"
+//In IE, set "cancelBubble"=true
+//"returnValue"=false
+
+//Normalizing Event Objects
+/* The following function goes over all the event object properties and
+makes sure each one can be found under a standard name.
+*/
+function normalizeEvent(event) {
+    if(!event.stopPropogation) {
+        event.stopPropogation=function() {
+            this.cancelBubble=true;
+        };
+        event.preventDefault=function() {
+            this.returnValue=false;
+        };
+    }
+    if(!event.stop) {
+        event.stop=function() {
+            this.stopPropogation();
+            this.preventDefault();
+        };
+    }
+    
+    if(event.srcElement && !event.target) {
+        event.target=event.srcElement;
+    }
+    if((event.toElement || event.fromElement) && !event.relatedTarget) {
+        event.relatedTarget=event.toElement || event.fromElement;
+    }
+    if(event.clientX != undefined && event.pageX ==undefined) {
+        event.pageX=event.clientX+document.body.scrollLeft;
+        event.pageY=event.clientY+document.body.scrollTop;
+    }
+    if(event.type=="keypress") {
+        event.character=String.fromCharCode(event.charCode || event.keyCode);
+    }
+    return event;
+}
+//With this function, we can write more convenient wrappers for "registerEventHandler"
+//and "unregisterEventHandler"
+
+function addHandler(node, type, handler) {
+    function wrapHandler(event) {
+        handler(normalizeEvent(event || window.event));
+    }
+    registerEventHandler(node, type, wrapHandler);
+    return {node: node, type: type, handler: wrapHanlder};
+}
+function removeHandler(object) {
+    unregisterEventHandler(object.node, object.type, object.handler);
+}
+
+//An example of this used could be stopping the letter "Q"
+var blockQ=addHandler(textfield, "keypress", function() {
+    if(event.character.toLowerCase()=="q") {
+        event.stop();
+    }
+});
+
+removeHandler(blockQ);
+
+//Tracking Focus
+//The following code would cause the background of a text input field to be yellow as long as it is focused
+addHandler(textfield, "focus", function(event) {
+    event.target.style.backgroundColor="yellow";
+});
+addHandler(textfield, "blur", function(event) {
+    event.target.style.backgroundColor="";
+});
+
+//Form Events
+//Each changeable form element is capable of firing "change" events
+//When content or value of input has changed
+//Note that for some inputs, such as text, it does not fire until element is unfocused
+addHandler(textfield, "change", function(event) {
+    print("Content of text field changed to '", event.target.value, "'.");
+});
+//Forms have a submit event which is fired when they submit
+//This gives us a much better way to do form validation
+//Register a submit handler, whcih stops the event when the content of the form is not valid
+//This way, when user does not have Javscript enabled, the form works still without instant validation
+
+//Window Events
+//"load" event fires when document is fully loaded
+//Whenever the document is scrolled, the browser fires a "scroll" event on window object
+
+
+</script>
+</body>
+</html>

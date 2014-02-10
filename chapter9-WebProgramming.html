@@ -1,0 +1,96 @@
+<html>
+<body>
+<script type="text/javascript">
+
+//Basic Web Scripting
+
+//The "window" object
+var comicWindow=window.open("http://xkcd.com");
+//Using this is considered bad style and probably blocked by your browser or requires permission.
+comicWindow.close();
+
+//The "document" object
+//Object representing the document shown in that window
+
+document.location.href;
+//returns the current URL
+
+var time=new Date();
+document.write(time.getHours() + ":" + time.getMinutes());
+//When it is used on a fully loaded document, it will replace the whole document by the given HTML, whcih is usually not what you intended.
+//The way to use this function is to have a script call it while the document is being loaded.
+
+//Timers
+//Document object provides methods for actions to happen after some time
+window.setTimeout(
+    function() {
+        document.location.href="site.html";
+    }, 5000
+);
+
+//window.clearTimeout : Cancels a timeout
+//window.setInterval : Perform a function repeatedly
+//window.clearInterval : Cancels an interval
+
+//Forms
+//Javascript has functions for decoding and encoding URIs
+var encoded=encodedURIComponent("aztec empire");
+//encoded=aztec%20empire
+var decoded=decodedURIComponent(encoded);
+
+//Scripting a Form
+</script>
+
+<form name="userInfo" method="get" action="/info.html">
+    <p>Please give us your information, so that we can send you spam.</p>
+    <p>Name: <input type="text" name="name"></p>
+    <p>Email: <input type="text" name="email"></p>
+    <p>Sex: <select nmae="sex">
+        <option>N/A</option>
+        <option>Male</option>
+        <option>Female</option>
+    </p>
+    <p><input name="send" type="submit" value="Send!"></p>
+</form>
+
+<script type="text/javascript">
+var spamForm=document.forms.userInfo;
+spamForm.method;
+//returns "get" as in GET Request from method=get in form
+spamForm.action;
+//returns "/info.html"
+
+spamForm.elements.name.value="Eugene"
+//Puts Eugene in the form field with the name "name"
+
+function validEmail(form) {
+    return form.elements.name.value != "" && /^.+@.+\w{2,4}$/.test(form.elements.email.value);
+}
+//Does a regex on the email to confirm (from Chapter 8) that it conforms to email address format
+
+//You can set an element's onclick behavior
+spamForm.elements.send.onclick = {
+    if(validEmail(spamForm)) {
+        spamForm.submit();
+    }
+    else {
+        alert("Give a name and email address!");
+    }
+}
+
+//Autofocus
+spamForm.elements.name.focus();
+//Sets the users cursor on a specific element
+
+//The navigator object was originally introduced as a place for browser-specific functionality
+
+navigator.userAgent;
+navigator.vendor;
+navigator.platform;
+
+
+
+
+</script>
+</body>
+</html>

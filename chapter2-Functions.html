@@ -1,0 +1,51 @@
+<html>
+<body>
+<script type="text/javascript">
+
+var x="A";
+
+function setVarToB() {
+    x="B";
+}
+setVarToB();
+document.write(x);
+
+var a=null;
+function b() {
+    return "B";
+}
+
+(a || b)();
+
+(a || function(){return "B";})();
+
+// Closure!
+function createFunction() {
+    var local=100;
+    return function(){return local;}
+}
+createFunction()();
+
+function makeAdder(amount) {
+    return function(number) {
+        return number+amount;   
+    };
+}
+var addTwo=makeAdder(2);
+document.write(addTwo(3));
+
+// Optional Arguments
+function power(base, exponent) {
+    var result-1;
+    if(exponent === undefined) exponent=2;
+    for (var count=0;count<exponent;count++) {
+        result *= base;
+    }
+    return result;
+}
+
+print("R",2,"D",2);
+
+</script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<html>
+<body>
+<script type="text/javascript">
+
+// Properties
+var text="purple haze";
+text["length"];
+text.length;
+
+// Objects: Think of them as a collection of properties
+var cat = 
+    {
+        color: "gray",
+        name: "Spot",
+        size: 46
+    };
+cat.size;
+delete cat.size;
+
+var empty = {}
+empty.notReally=100;
+empty;
+
+
+var chineseBox={};
+chineseBox.content=chineseBox;
+"content" in chineseBox;
+
+// A set is a collection where no value appears more than once
+
+// Mutability
+
+var object1={value: 10};
+var object2=object1;
+var object3={value: 10};
+
+object1==object2;
+object1==object3;
+object1.value=15;
+object2.value;
+object3.value;
+
+//Objects as Collections: Arrays
+
+var mailArchive=["mail one","mail two","mail three"];
+
+for(var current=0; current < mailArchive.length; current++) {
+    print("processing email #", current, ": ", mailArchive[current]);
+    
+function range(upTo) {
+    var result=[];
+    for(var i=0; i <= upTo; i++) {
+        result[i]=i;
+    }
+    return result;
+}
+
+// Methods
+
+var doh="Doh";
+typeof doh.toUpperCase;
+doh.toUpperCase();
+
+var mack=[];
+mack.push("Mack");
+mack.push("the");
+mack.push("Knife");
+mack;
+mack.join(" ");
+mack.pop();
+mack;
+
+
+var words= "Cities of the Interior"
+words.split();
+
+var paragraph = "born 15-11-2003 (mother Spot): White Fang";
+paragraph.charAt(0) == "b" && paragraph.charAt(1) == "o";
+paragraph.slice(0,4) == "born";
+
+function startsWith(string, pattern) {
+    return string.slice(0, pattern.length) == pattern;
+}
+
+startsWith("rotation", "rot");
+
+"Pip".charAt(250);
+// ""
+"Nop".slice(1,10);
+// "op"
+
+
+// This chapter has an algoritm for parsing organized text
+
+//Some more theory
+
+// The arguments object
+function argumentCounter() {
+    return "You gave me " + arguments.length + " arguments.";
+}
+argumentCounter("1","2","3");
+// You gave me 3 arguments
+
+//Polymorphism and function overriding
+function range(start, end) {
+    if(arguments.length<2) {
+        end=start;
+        start=0;
+    }
+    var result=[];
+    for (var i=start; i <= end; i++) result.push(i);
+    return result;
+}
+
+// Java objects have Not Enumerable properties
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<html>
+<body>
+<script type="text/javascript">
+
+// High-Order Functions
+
+function printArray(array) {
+    for (var i=0;i<array.length;i++) {
+        print(array[i]);
+    }
+}
+
+function forEach(array,action) {
+    for (var i=0;i<array.length;i++) {
+        action(array[i]);
+    }
+}
+
+// Anonymous Functions
+function sum(numbers) {
+    var total=0;
+    forEach(numbers, function(number) {
+        total += number;
+    });
+    return total;
+}
+
+//Rewrite Cat-Finding Code from Chapter 3
+forEach(mailArchive[mail].split("\n") , handleParagraph);
+
+//Modifying Functions
+function negate(func) {
+    return function(x) {
+        return !func(x);
+    };
+}
+
+function negate(func) {
+    return function() {
+        return !func.apply(null, arguments);
+    };
+}
+
+// The reduce Function
+function reduce(combine, base, array) {
+    forEach(array, function(element) {
+        base = combine(base, element);
+    });
+    return base;
+}
+
+function add(a, b) {
+    return a+b;
+}
+
+function sum(numbers) {
+    return reduce(add, 0, numbers);
+}
+
+function countZeroes(array) {
+    function counter(total, element) {
+        return total + (element === 0 ? 1 : 0);
+    }
+    return reduce(counter, 0, array);
+}
+
+
+function count(test, array) {
+    var counted=0;
+    forEach(array, function(element) {
+        if (test(element)) counted++;
+    });
+    return counted;
+}
+
+function countZeroes(array) {
+    function isZero(x) {return x === 0;}
+    return count(isZero, array);
+}
+
+// Map
+funciton map(func, array) {
+    var result=[];
+    forEach(array, function(element) {
+        result.push(func(element));
+    });
+    return result;
+}
+
+// Other Functional Tricks
+//Operator functions
+var op= {
+    "+": function(a, b) {return a+b;},
+    "==": function(a,b) {return a==b;},
+    "===": function(a,b) {return a===b;},
+    "!": function(a){return !a;}
+    /* and so on */
+};
+
+//Partial Application
+function partial(func) {
+    var knownArgs=arguments;
+    return function() {
+        var realArgs=[];
+        for (var i=1;i<knownArgs.length;i++)
+            realArgs.push(knownArgs[i]);
+        for (var i=0;i<arguments.length;i++)
+            realArgs.push(arguments[i]);
+        return func.apply(null,readings);
+    };
+}
+
+
+//example of Map and Partial
+map(partial(op["+"],1), [0,2,4,6,8,10]);
+
+function square(x) {
+    return x*x;
+}
+
+map(partial(map,square), [[10], [0, 1], [3]]);
+
+// Composition
+
+function negate(func) {
+    return function() {
+        return function() {
+            return !func.apply(null, arguments);
+        }
+    }
+}
+
+function compose(f1,f2) {
+    return function() {
+        return f1(f2.apply(null, arguments));
+    }
+}
+
+//example of composition
+var isNotNaN=compose(op["1"], isNaN);
+isNotNan(5);
+
+
+
+
+</script>
+</body>
+</html>

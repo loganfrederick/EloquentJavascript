@@ -1,0 +1,143 @@
+<html>
+<body>
+<script type="text/javascript">
+
+//Object-Oriented Programming
+
+//Defining Methods
+var rabbit={};
+
+rabbit.speak=function(line) {
+    print("The rabbit says'",line,"'");
+}
+
+rabbit.speak("I'm alive!'");
+
+// Using "this"
+
+function speak(line) {
+    print("The ", this.adjective, " rabbit says '",line,"'");
+}
+var white={adjective: white, speak: speak};
+var fat={adjective: white, speak: speak};
+
+white.speak("Oh my ears and whiskers!");
+fat.speak("I could sure use a carrot right now!");
+
+//The first argument to the apply method is the object to apply
+//The second is the function arguments
+speak.apply(fat, ["Yum."]);
+//Or use "call" method, which is the same except arguments do not need to be in a list
+speak.call(fat,"Yum", "Burp");
+
+// Constructors
+function Rabbit(adjective) {
+    this.adjective=adjective;
+    this.speak=function speak(line) {
+        print("The ", this.adjective, " rabbit says '",line,"'");
+    }
+}
+var killerRabbit=new Rabbit("killer");
+killerRabbit.speak("ROAR");
+
+// Building from Prototype
+function makeRabbit(adjective) {
+    return {
+        adjective: adjective,
+        speak: function(line) {/*etc*/}
+    };
+}
+var blackRabbit=makeRabbit("black");
+
+//Demonstrating prototypes
+Rabbit.prototype.teeth="small";
+killerRabbit.teeth;
+    // Returns "small"
+killerRabbit.teeth="long, sharp, and bloody";
+killerRabbit.teeth;
+    //Returns "long, sharp, and bloody"
+Rabbit.prototype.teeth;
+    //Returns "small"
+//"This does mean that the prottype can be used at any time to add new properties and methods to all objects based on it."
+Rabbit.prototype.dance=function() {
+    print("The ", this.adjective, " rabbit dances a jig.");
+}
+//"The prototypical rabbit is the perfect place for those values that all rabbits have in common, such as the speak method. Here is a new approach to the Rabbit constructor."
+function Rabbit(adjective) {
+    this.adjective=adjective;
+}
+Rabbit.prototype.speak=function(line) {
+    print("The ", this.adjective, "rabbit says '",line,"'");
+}
+
+//Prototype Pollution
+//An issue is that it can often be useful to extend the prototypes of standard constructors such as Object and Array with new useful functions.
+//We could give all objects a method called properties, which returns an array with the names of the nonhidden properties that the object has.
+Object.prototype.properties=function() {
+    var result=[];
+    for(var property in this) {
+        result.push(property);
+    }
+    return result;
+};
+//Now that the Object prototype ahs a property called properties, looping over the properties of any object will also give us that shared property, which is generally not what we want. We are interest only in the properties that the object itself has.
+
+//There is a  way to find out whether a property belongs to the object itself or to one of its prottypes. It does make looping clumsier.
+//Every object has a method "hasOwnProperty". Rewriting the last example:
+Object.prototype.properties=function() {
+    var result=[];
+    for(var property in this) {
+        if(this.hasOwnProperty(property)) {
+           result.push(property);
+        }
+    }
+    return result;
+};
+//Abstract that into a high-order function
+function forEachIn(object, action) {
+    for(var property in object) {
+        if (object.hasOwnProperty(property)) {
+            action(property, object[property]);
+        }
+    }
+}
+//But what if there is a cat named hasOwnProperty?
+//It will be stored int he object and the next time we want to go over the colleciton of cats, calling object.hasOwnProperty will fail because that property no longer points at a function value.
+//This can be solved with the ugly:
+function forEachIn(object, aciton) {
+    for(var property in object) {
+        if(Object.proptotype.hasOwnProperty.call(object, property)) {
+            action(property, object[property]);
+        }
+    }
+}
+//Above, instead of using the method found int he object itself, we ge tthe method form the Object prototype and then use "call" to apply it to the right object.
+//Unless someone actually changes the metho in Object.prototype, don't ever do that, this should work.
+
+//Objects as Dictionaries
+var object={foo: "bar"};
+Object.prototype.propertyIsEnumerable.call(object,"foo");
+//returns "true"
+
+function Dictionary(startValues) {
+    this.values=startValues || {};
+};
+Dictionary.prototype.store=function(name, value) {
+    this.values[name]=value;
+};
+Dictionary.prototype.lookup=function(name) {
+    return this.value[name];
+};
+Dictionary.prototype.contains=function(name) {
+    return Object.prototype.propertyIsEnumerable.call(this.values, name);
+};
+Dictionary.prototype.each =function(action) {
+    forEachIn(this.values, action);
+};
+
+
+
+
+</script>
+</body>
+</html>

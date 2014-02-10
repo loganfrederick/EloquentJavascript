@@ -1,0 +1,149 @@
+<html>
+<body>
+<script type="text/javascript">
+
+"doubledare".search(/le/);
+
+var slash=/\//;
+"AC/DC".search(slash);
+
+//Matching Sets of Characters
+var asteriskOrBrace=/[\{\*]/;
+var story = "We noticed the *giant sloth*, hanging from a giant branch";
+story.search(asteriskOrBrace);
+
+var digitSurroundedBySpace = /\s\d\s/;
+
+var notABC= /[^ABC]/;
+"ABCBACCBADABC".search(notABC);
+
+var datePattern=/\d\d\/\d\d\/\d\d\d\d/;
+
+//Matching Word and String Boundaries
+/a/.test("blah");
+/^a$/.test("blah");
+
+/cat/.test("concatenate");
+// true
+/\bcat\b/.test("concatenate");
+// false
+
+
+//Repeating Patterns
+var parentheticText = /\(.*\)/;
+"Its (the sloth's) claws were gigantic!".search(parentheticText);
+// 4
+
+var datePattern = /\d{1,2}\/\d\d?\/\d{4}/;
+"born 15/11/2003 (mother Spot): White Fang".search(datePattern);
+// 5
+
+//Grouping Subexpressions
+var cartoonCrying = /boo(hoo+)+/i;
+cartoonCrying.test("Boohoooohoohooo");
+// true
+
+
+//Choosing Between Alternatives
+var holyCow = /\b(sacred|holy) (cow|bovine|bull|taures)\b/i;
+holyCow.test("Sacred bovine!");
+//true
+
+
+//Matching and Replacing
+//The "match" method
+"No".match(/yes/i);
+// null
+
+"...yes".match(/yes/i);
+// ["yes"]
+
+
+"Giant Ape".match(/giant (w\+)/i);
+// ["Giant Ape", "Ape"]
+
+function extractDate(string) {
+    var found = string.match(/\b(\d\d?)\/(\d\d?)\/(\d{4})\b/);
+    if (found == null) {
+        throw new Error("No date found in '" + string + "'.");
+    }
+    return new Date(Number(found[3]), Number(found[2] -1, Number(found[1]));
+}
+
+//The "replace" method
+"Borodubur".replace(/[ou]/g, "a");
+// Barabadar
+
+var names = "Picasso, Pablo\nGauguin, Paul\nVan Gogh, Vincent";
+names.replace(/([\w ]+), ([\w ]+)/g, "$2 $1");
+// "Pablo Picasso\nPaul Gauguin\nVincent Van Gogh"
+
+//When a function is the second parameter instead of a string, the function gets called whenever a match is found in the original calling string
+"the cia and fbi".replace(/\b(fbi|cia)\b/g), function(str) {
+    return str.toUpperCase();
+});
+// "the CIA and FBI"
+
+
+//From Chapter 5
+function escapeHTML(text) {
+    var replacements = [["&", "&amp;"],["\"", "&quot;"]];
+    forEach(replacements, function(replace) {
+        text = text.replace(replace[0], replace[1]);
+    });
+    return text;
+}
+//Newer version only calls replace once
+function escapeHTML(text) {
+    var replacements = {"&": "&amp;", "\"": "&quot;"};
+    return text.replace(/[<>&"]/g, function(character) {
+        return replacements[character];
+    });
+}
+
+
+//Dynamically Create Regex Objects
+var badWords = ["ape", "monkey"];
+var pattern = new RegExp(badWords.join("|"), "i");
+function isAcceptable(text){
+    return !pattern.test(text);
+}
+
+isAcceptable("The quick brown fox");
+//True
+isAcceptable("Cut that monkeybusiness");
+//false
+
+//Backslashes you want in the regex must be escaped
+var digits = new RegExp("\\d+");
+
+//Parsing .ini files
+function parseINI(string) {
+    var lines=splitLines(string);
+    var categories=[];
+    
+    function newCategory(name) {
+        var cat={name: name, fields: []};
+        categories.push(cat);
+        return cat;
+    }
+    var currentCategory=newCategory("TOP");
+    
+    forEach(lines, function(line) {
+        var match;
+        if(/^\s*(;.*)?$/.test(line))
+            return;
+        else if (match = line.match(/^\[(.*)\]$/))
+            currentCategory=newCategory(match[1]);
+        else if (match = line.match(/^(\w+)=(.*)$/))
+            currentCategory.fields.push({name: match[1], value: match[2]});
+        else
+            throw new Error("Line '" + line + "' is invalid.");
+    });
+    return categories;
+}
+
+
+</script>
+</body>
+</html>

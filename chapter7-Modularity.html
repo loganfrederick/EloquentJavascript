@@ -1,0 +1,106 @@
+<html>
+<body>
+<script type="text/javascript">
+
+//Functions as Local Namespaces
+function buildMonthNameModule() {
+    var names=["January","February","March","April","May","June","July","August","September","October","November","December"];
+    function getMonthName(number) {
+        return names[number];
+    }
+    function getMonthNumber(name) {
+        for(var number=0;number<names.length;number++) {
+            if (names[number]==name) {
+                return number;
+            }
+        }
+    }
+    
+    window.getMonthName=getMonthName;
+    window.getMonthNumber=getMonthNumber;
+    
+    getMonthNumber("February");
+    //returns "1"
+    
+    //Provide is a helper function which can be given an object containing an object that describes the interface with property names indicating the variable names and the values those variables should get
+    function provide(values) {
+        forEachIn(values, function(name, values) {
+            window[name]=value;
+        });
+    }
+}
+buildMonthNameModule();
+
+//The "window" object is an object whose properties represent the top-level variables
+
+//When programming, you can start with everything in the top level and then put them into functions later
+
+//Module Objects
+//Some modules export so many variables that it is bad to put them all in the top level
+//The "Math" object represents the module as a single object whose properties are the functions and values it exports.
+//An example:
+var HTML= {
+    tag: function(name, content, properties) {
+        return {name: name, properties: properties, content: content};
+    },
+    link: function(target, text) {
+        return HTML.tag("a",[text],{href: target});
+    }
+    // Add more HTML tag producing functions here
+}
+
+var days= (
+    function() {
+        var names=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+        
+        return {
+            getDayName: function(number) {return names[number];},
+            getDayNumber: function(name) {
+                for(var number=0;number<names.length;number++) {
+                    if(names[number]==name) return number;
+                }
+            }
+        }
+    };
+)();
+
+/*
+Important parts of Interface Design:
+1. Predictability: Use standard conventions like camelCase and Caps for Constructors
+2. Composability: Use simple-as-possible data structs and make funcitons do one clear thing
+3. Layered Interfaces: Allow for both simple and detailed intefaces to your modules
+*/
+
+//Argument Objects
+//The following function can be used to find the position of a value in an array, with extra optional arguments that allow you to search just part of the array (start and end) and to use a custom function as a replacement for == when comparing elements
+function positionOf(element,array,compare,start,end) {
+    if(start==null) start=0;
+    if(end==null) end=array.length;
+    for(; start<end;start++) {
+        var current=array[start];
+        if(compare ? compare(element,current) : element==current) return start;
+    }
+}
+
+//Or using optional arguments in args
+//optional arguments: compare, start, end
+function positionOf(element,array,args) {
+    args=args || {};
+    var start=(args.start==null ? 0 : args.start),
+        end=(args.end==null) ? array.length : args.end,
+        compare=args.compare;
+    
+    for(;start<end;start++) {
+       var current=array[start];
+       if(compare ? compare(element, current) : element==current) return start;
+    }
+}
+positionOf(2,[1,2,3,4,3,2,1], {start: 3, end: 6});
+//returns "5"
+
+
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<html>
+<body>
+<script type="text/javascript">
+
+//The HTTP Protocol
+//A simple request might look like this
+
+// GET /files/data.txt HTTP/1.1
+// Host: eloquentjavascript.net
+// User-Agent: My Imaginary Browser
+
+//A typical response
+
+// HTTP/1.1 200 OK
+// Last-Modified: Mon, 23 Jul 2007 08:41:56 GMT
+// Content-Length: 40
+// Content-Type: text/plain
+// This is the content of the file data.txt
+
+
+// The XMLHttpRequest API
+
+// Creating a Request Object
+function requestObject() {
+    if (window.XMLHTTPRequest)
+        return new XMLHttpRequest();
+    else if (window.ActiveXObject)
+        return new ActiveXObject("Msxml2.XMLHTTP");
+    else
+        throw new Error("Could not create HTTP request object.");
+}
+
+// A Simple Request
+var request=requestObject();
+request.open("GET","files/data.txt",false);
+request.send(null);
+
+request.responseText;
+// "This is the content of the file data.txt"
+
+request.getResponseHeader("Content-Type");
+// "text/plain"
+request.status;
+// 200
+request.statusText;
+// "OK"
+
+
+//Making Asynchronous Requests
+request.open("GET", "files/data.txt", true);
+request.send(null);
+
+// A request object has a readyState property, indicating the state it is in. To react to changes in this status, you can set the "onreadystatechange" property to a function that is called every time the state changes.
+request.open("GET", "files/data.txt", true);
+request.onreadystatechange = function() {
+    if(request.readyState = 4)
+        print(request.status + " " + request.statusText);
+};
+request.send(null);
+
+// Fetching XML Data
+request.open("GET", "files/fruit.xml", false);
+request.send(null);
+request.responseXML.documentElement.childNodes.length;
+
+//Reading JSON data
+request.open("GET","files/fruit.json",true);
+request.onreadystatechange = function() {
+    if (request.readyState == 4) {
+        var data = eval("(" + request.responseText + ")");
+        print(data["lemon"]);
+    }
+};
+request.send(null);
+
+// A Basic Request Wrapper
+function simpleHttpRequest(url, success, failure) {
+    var request = requestObject();
+    request.open("GET", url, true);
+    request.onreadystatechange = function() {
+        if(request.readyState==4) {
+            if(request.status==200 || !failure)
+                success(request.responseText);
+            else if (failure)
+                failure(request.status, request.statusText);
+        }
+    };
+    request.send(null);
+}
+    
+
+
+
+</script>
+</body>
+</html>

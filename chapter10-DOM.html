@@ -1,0 +1,122 @@
+<html>
+<body>
+<script type="text/javascript">
+
+//Node Links
+
+//Every node has a "parentNode" property
+//And an array of "childNodes"
+//For convenience, links to "firstChild" and "lastChild"
+//And "nextSibling" and "previousSibling"
+
+//Types of Nodes
+//Find out whether a node represents a piece of text or an HTML node, you can look at "nodeType"
+//A Node Type of "1" is a regular node and "3" is text
+//Written as "node.nodeType"
+
+//Regular nodes have a property "nodeName", indicating their HTML tag
+//Text node have the property "nodeValue", returning their text
+
+//The node name is always capitalized, keep in mind for comparisons
+function isTextNode(node) {
+    return node.nodeType==3;
+}
+
+function isImage(node) {
+    return !isTextNode(node) && node.nodeName=="IMG";
+}
+
+//The "innerHTML" property
+//Each node has the "innerHTML" property which represents the text in the node
+document.body.innerHTML="<p>Oops</p>";
+
+//Finding Your Node
+var picture=document.getElementById("picture");
+picture.src="img/random.png";
+//Also "document.body.getElementsByTagName"
+
+//Node Creation
+var secondHeader=document.createElement("H1");
+var secondTitle=document.createTextNode("Chapter 2: Deep Magic");
+secondHeader.appendChild(secondTitle);
+document.body.appendChild(secondHeader);
+
+var newImage = document.createElement("IMG");
+newImage.setAttribute("src","img/random.png");
+document.body.appendChild(newImage);
+newImage.getAttribute("src");
+//returns "img/random.png"
+
+//A Creation Helper Function
+function dom(name, attributes) {
+    var node=document.createElement(name);
+    if(attributes) {
+        forEachIn(attributes, function(name,value){
+            node.setAttribute(name,value);
+        });
+    }
+    for(var i=2;i<arguments.length;i++) {
+        var child=arguments[i];
+        if(typeof child=="string") {
+            child=document.createTextNode(child);
+        }
+        node.appendChild(child);
+    }
+    return node;
+}
+/*
+This function creates a node of the type given as its first argument, sets its attributes based on the properties of the second argument, and then adds any remaining arguments as children of the new node.
+*/
+
+//Moving Nodes Around
+//insertBefore()
+//replaceChild()
+//removeChild()
+node.parentNode.removeChild(node);
+
+//Defining a shorthand
+function removeNode(node) {
+    node.parentNode.removeChild(node);
+}
+
+//An Implementation of print
+var output = dom("DIV", {id: "printOutput"}, dom("H1",null,"Print output:"));
+document.body.appendChild(output);
+
+function print() {
+    var result=[];
+    forEach(arguments, function(arg){
+        result.push(String(arg));
+    });
+    output.appendChild(dom("PRE",null,result.join("")));
+}
+
+//CSS in JS
+
+//The style property
+picture.style.borderWidth="4px";
+
+//Hiding Nodes
+picture.style.display="none";
+//picture gone
+picture.style.display="";
+//picture visible
+
+//Positioning
+
+//The below makes the picture spin around the document in circles
+picture.style.position="absolute";
+var angle=0;
+setInterval(function(){
+    angle += 0.1;
+    picture.style.left=(100+100*Math.cos(angle)) + "px";
+    picture.style.top=(100+100*Math.sin(angle))+"px";
+},100);
+
+//Node size
+picture.style.width="400px";
+picture.style.height="200px";
+
+</script>
+</body>
+</html>
